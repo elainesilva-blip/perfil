@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questionário de Perfil Comportamental</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --border: #cbd5e1;
+      --text: #1e293b;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --success: #15803d;
+      --danger: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 16px;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.75rem;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 12px;
+    }
+
+    .header-grid {
+      display: grid;
+      grid-template-columns: 2fr 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: var(--primary-light);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #bfdbfe;
+    }
+
+    @media (max-width: 768px) {
+      .header-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--primary);
+    }
+
+    .field-group input {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .instructions {
+      background-color: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 16px 20px;
+      border-radius: 6px;
+      margin-bottom: 28px;
+    }
+
+    .instructions h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      color: #92400e;
+    }
+
+    .instructions ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .instructions li {
+      margin-bottom: 4px;
+    }
+
+    .tables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 20px;
+    }
+
+    @media (max-width: 520px) {
+      .tables-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .disc-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .disc-card.complete {
+      border-color: #86efac;
+    }
+
+    .disc-card.incomplete-highlight {
+      border: 2px solid var(--danger);
+    }
+
+    .disc-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .disc-table th {
+      background-color: var(--primary);
+      color: #ffffff;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+    }
+
+    .disc-table th span.badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-right: 8px;
+    }
+
+    .disc-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.93rem;
+    }
+
+    .disc-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .disc-table td.select-cell {
+      width: 95px;
+      text-align: right;
+    }
+
+    select.score-select {
+      width: 75px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      background-color: #f8fafc;
+      cursor: pointer;
+    }
+
+    select.score-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background-color: #fff;
+    }
+
+    .actions {
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      opacity: 0.92;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: var(--text);
+    }
+
+    #status-msg {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    #confirmation-box {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #f0fdf4;
+      border: 1px solid #86efac;
+      display: none;
+    }
+
+    #confirmation-box h3 {
+      margin: 0 0 8px 0;
+      color: var(--success);
+    }
+
+    #confirmation-box p {
+      margin: 0;
+      color: #14532d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Questionário de Perfil Comportamental</h1>
+
+    <form id="disc-form" onsubmit="event.preventDefault(); enviarQuestionario();">
+      <div class="header-grid">
+        <div class="field-group">
+          <label for="nome">Nome Completo *</label>
+          <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required />
+        </div>
+        <div class="field-group">
+          <label for="email">E-mail *</label>
+          <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required />
+        </div>
+        <div class="field-group">
+          <label for="data">Data *</label>
+          <input type="date" id="data" name="data" required />
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h2>Como preencher este questionário</h2>
+        <p>
+          Abaixo você encontrará <strong>25 blocos</strong> com 4 características ou comportamentos cada. Em cada bloco, classifique as 4 opções atribuindo notas de <strong>1 a 4</strong> conforme o quanto elas descrevem você:
+        </p>
+        <ul>
+          <li><strong>4</strong> — A opção que <strong>MAIS</strong> descreve você.</li>
+          <li><strong>3</strong> — A segunda opção que mais descreve você.</li>
+          <li><strong>2</strong> — A terceira opção que descreve você.</li>
+          <li><strong>1</strong> — A opção que <strong>MENOS</strong> descreve você.</li>
+        </ul>
+        <p style="margin: 8px 0 0 0; font-size: 0.9rem; color: #78350f;">
+          <strong>Regra importante:</strong> Não é permitido repetir números dentro da mesma tabela (cada bloco deve conter exatamente os números 1, 2, 3 e 4).
+        </p>
+      </div>
+
+      <div id="tables-container" class="tables-grid"></div>
+
+      <div class="actions">
+        <div>
+          <button type="submit" id="btn-submit" class="btn-primary">Finalizar e Enviar Respostas</button>
+          <button type="button" class="btn-secondary" onclick="limparFormulario()">Limpar Respostas</button>
+        </div>
+        <span id="status-msg">Progresso: 0 de 25 tabelas preenchidas</span>
+      </div>
+    </form>
+
+    <div id="confirmation-box">
+      <h3>Respostas enviadas com sucesso!</h3>
+      <p id="confirmation-text"></p>
+    </div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNHqYtYNuhmtDx0aZMK1hyQiFHvIprZAdfvPekPXovZAqEzFte-OcS5QKhFwgkjPj3/exec";
+    const EMAIL_DESTINO = "elaine.silva@greatschools.com.br";
+
+    const tabelasDISC = [
+      { num: 1, titulo: "Tende a agir de forma...", itens: ["Assertiva", "Persuasiva", "Paciente", "Contemplativa"] },
+      { num: 2, titulo: "Confortável com...", itens: ["Ser decisivo", "Amizade social", "Ser parte de um time", "Planejamento e ordem"] },
+      { num: 3, titulo: "Desejo de...", itens: ["Variedade", "Menos estrutura", "Harmonia", "Lógica"] },
+      { num: 4, titulo: "Sob estresse pode se tornar...", itens: ["Ditatorial", "Sarcástico", "Submisso", "Arredio"] },
+      { num: 5, titulo: "Característica principal...", itens: ["Franco", "Otimista", "Serviçal", "Ordeiro"] },
+      { num: 6, titulo: "Quando em conflito, esse estilo…", itens: ["Demanda ação", "Ataca", "Reclama", "Evita"] },
+      { num: 7, titulo: "Força aparente...", itens: ["Solucionador de problemas", "Encorajador", "Supporter", "Organizador"] },
+      { num: 8, titulo: "Com erros...", itens: ["Informa o erro diretamente", "Chama a pessoa e explica o erro", "Fica calado e aceita o erro", "Se incomoda e questiona"] },
+      { num: 9, titulo: "Sob estresse pode se tornar...", itens: ["Crítico", "Superficial", "Indeciso", "Cabeça dura"] },
+      { num: 10, titulo: "Pode ser considerado...", itens: ["Impaciente", "Inoportuno", "Indeciso", "Inseguro"] },
+      { num: 11, titulo: "Necessita de....", itens: ["Controle", "Aprovação", "Rotina", "Padrão"] },
+      { num: 12, titulo: "Limitação desse perfil...", itens: ["Direto", "Desorganizado", "Indireto", "Detalhista"] },
+      { num: 13, titulo: "Possui medo de...", itens: ["Perder", "Rejeição", "Mudanças bruscas", "Estar errado"] },
+      { num: 14, titulo: "Mensura desempenho com...", itens: ["Resultados", "Reconhecimento", "Compatibilidade", "Precisão"] },
+      { num: 15, titulo: "Com subalternos, costuma ser...", itens: ["Orgulhoso", "Permissivo", "Humilde", "Cauteloso"] },
+      { num: 16, titulo: "Abordagem primária...", itens: ["Independente", "Interativo", "Estável", "Corretivo"] },
+      { num: 17, titulo: "Outra limitação desse perfil...", itens: ["Intenso", "Não tradicional", "Indeciso", "Impessoal"] },
+      { num: 18, titulo: "Ponto cego...", itens: ["Ser responsabilizado", "Realizar compromissos", "Necessidade de mudança", "Tomada de decisão"] },
+      { num: 19, titulo: "Mensura desempenho com...", itens: ["Histórico", "Elogios", "Contribuição", "Qualidade dos resultados"] },
+      { num: 20, titulo: "Prefere tarefas....", itens: ["Desafiadoras", "Relacionada a pessoas", "Agendadas", "Estruturadas"] },
+      { num: 21, titulo: "Com atrasos...", itens: ["Se irrita e confronta", "Nem liga, está distraído", "Sabe do atraso, mas aceita", "Reclama e analisa a situação"] },
+      { num: 22, titulo: "Em situações extremas...", itens: ["Se preocupa demais com metas", "Fala sem pensar", "Procrastina ao invés de fazer", "Analisa demais"] },
+      { num: 23, titulo: "Precisa melhorar...", itens: ["Empatia e Paciência", "Controle emocional", "Ser assertivo sob pressão", "Se preocupar menos sobre tudo"] },
+      { num: 24, titulo: "Em uma discussão...", itens: ["Busca ter a razão", "Busca diminuir o conflito", "Busca concordância", "Busca comprovar sua opinião"] },
+      { num: 25, titulo: "Quando vai às compras...", itens: ["Sabe o que quer", "Se diverte", "Fica indeciso", "Busca ofertas"] }
+    ];
+
+    document.getElementById("data").valueAsDate = new Date();
+
+    const container = document.getElementById("tables-container");
+
+    tabelasDISC.forEach((tabela) => {
+      const card = document.createElement("div");
+      card.className = "disc-card";
+      card.id = `card-${tabela.num}`;
+
+      let rowsHTML = "";
+      tabela.itens.forEach((item, idx) => {
+        rowsHTML += `
+          <tr>
+            <td>${item}</td>
+            <td class="select-cell">
+              <select 
+                class="score-select" 
+                data-table="${tabela.num}" 
+                data-row="${idx}" 
+                aria-label="${tabela.titulo} - ${item}"
+                onchange="atualizarOpcoesTabela(${tabela.num})"
+              >
+                <option value="">--</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      });
+
+      card.innerHTML = `
+        <table class="disc-table">
+          <thead>
+            <tr>
+              <th colspan="2"><span class="badge">${tabela.num}/25</span>${tabela.titulo}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHTML}
+          </tbody>
+        </table>
+      `;
+
+      container.appendChild(card);
+    });
+
+    function atualizarOpcoesTabela(tableNum) {
+      const selects = document.querySelectorAll(`select[data-table="${tableNum}"]`);
+      const valoresSelecionados = Array.from(selects)
+        .map((s) => s.value)
+        .filter((v) => v !== "");
+
+      selects.forEach((select) => {
+        const valorAtual = select.value;
+        Array.from(select.options).forEach((option) => {
+          if (option.value === "") return;
+          if (valoresSelecionados.includes(option.value) && option.value !== valorAtual) {
+            option.disabled = true;
+          } else {
+            option.disabled = false;
+          }
+        });
+      });
+
+      const card = document.getElementById(`card-${tableNum}`);
+      if (valoresSelecionados.length === 4) {
+        card.classList.add("complete");
+        card.classList.remove("incomplete-highlight");
+      } else {
+        card.classList.remove("complete");
+      }
+
+      atualizarProgresso();
+    }
+
+    function atualizarProgresso() {
+      let completas = 0;
+      for (let i = 1; i <= 25; i++) {
+        const selects = document.querySelectorAll(`select[data-table="${i}"]`);
+        const preenchidos = Array.from(selects).filter((s) => s.value !== "").length;
+        if (preenchidos === 4) completas++;
+      }
+      document.getElementById("status-msg").textContent = `Progresso: ${completas} de 25 tabelas preenchidas`;
+    }
+
+    function limparFormulario() {
+      if (!confirm("Deseja realmente limpar todas as respostas?")) return;
+      document.querySelectorAll("select.score-select").forEach((s) => {
+        s.value = "";
+        Array.from(s.options).forEach((opt) => (opt.disabled = false));
+      });
+      document.querySelectorAll(".disc-card").forEach((c) => {
+        c.classList.remove("complete", "incomplete-highlight");
+      });
+      document.getElementById("confirmation-box").style.display = "none";
+      atualizarProgresso();
+    }
+
+    function formatarPct(valor) {
+      return (valor * 100).toFixed(1).replace(".", ",") + "%";
+    }
+
+    async function enviarQuestionario() {
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const data = document.getElementById("data").value;
+
+      let primeiraIncompleta = null;
+
+      for (let i = 1; i <= 25; i++) {
+        const selects = document.querySelectorAll(`select[data-table="${i}"]`);
+        const valores = Array.from(selects).map((s) => s.value);
+        const unicos = new Set(valores.filter((v) => v !== ""));
+
+        const card = document.getElementById(`card-${i}`);
+        if (unicos.size !== 4) {
+          card.classList.add("incomplete-highlight");
+          if (!primeiraIncompleta) primeiraIncompleta = card;
+        } else {
+          card.classList.remove("incomplete-highlight");
+        }
+      }
+
+      if (primeiraIncompleta) {
+        alert("Por favor, preencha todas as 25 tabelas sem repetir números (1, 2, 3 e 4) antes de finalizar.");
+        primeiraIncompleta.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      let somaD = 0, somaI = 0, somaS = 0, somaC = 0;
+      let detalhesTexto = "";
+
+      tabelasDISC.forEach((tabela) => {
+        const selects = document.querySelectorAll(`select[data-table="${tabela.num}"]`);
+        const vals = Array.from(selects).map((s) => parseInt(s.value, 10));
+
+        somaD += vals[0];
+        somaI += vals[1];
+        somaS += vals[2];
+        somaC += vals[3];
+
+        detalhesTexto += `${tabela.num}. ${tabela.titulo}\n   - ${tabela.itens[0]} (D): ${vals[0]}\n   - ${tabela.itens[1]} (I): ${vals[1]}\n   - ${tabela.itens[2]} (S): ${vals[2]}\n   - ${tabela.itens[3]} (C): ${vals[3]}\n\n`;
+      });
+
+      const pD = somaD / 250;
+      const pI = somaI / 250;
+      const pS = somaS / 250;
+      const pC = somaC / 250;
+
+      const perfis = [
+        { nome: "Dominante", pts: somaD },
+        { nome: "Influente", pts: somaI },
+        { nome: "eStável", pts: somaS },
+        { nome: "Cauteloso", pts: somaC }
+      ];
+      const maxPts = Math.max(somaD, somaI, somaS, somaC);
+      const perfilPredominante = perfis
+        .filter((p) => p.pts === maxPts)
+        .map((p) => p.nome)
+        .join(" / ");
+
+      const necControle = pD + pC;
+      const necPerfeicao = pS + pC;
+      const necAmbicao = pD + pC;
+      const necBrilhar = pD + pI;
+      const necEstabilidade = pS + pC;
+      const necAventura = pD + pI;
+
+      const ptComPessoas = pI + pS;
+      const ptSozinho = pD + pC;
+      const ptEmocional = pI + pS;
+      const ptRacional = pD + pC;
+      const ptExtrovertido = pD + pI;
+      const ptIntrovertido = pS + pC;
+      const ptExecutor = pD + pC;
+      const ptPrecisaAlguem = pI + pS;
+      const ptConexao = pI + pS;
+      const ptSignificancia = pD + pC;
+
+      const relatorioCompleto =
+`DADOS DO RESPONDENTE
+Nome: ${nome}
+E-mail: ${email}
+Data: ${data}
+
+====================================================
+ANÁLISE DE PERFIL (MODELO ABA PERFIL DISC)
+====================================================
+Perfil Predominante: ${perfilPredominante}
+
+1. PONTUAÇÃO CONSOLIDADA:
+- Dominante (D): ${somaD} pts (${formatarPct(pD)})
+- Influente (I): ${somaI} pts (${formatarPct(pI)})
+- eStável (S): ${somaS} pts (${formatarPct(pS)})
+- Cauteloso (C): ${somaC} pts (${formatarPct(pC)})
+
+2. NECESSIDADES BÁSICAS COMBINADAS:
+- Necessidade de Controle: ${formatarPct(necControle)}
+- Necessidades de Perfeição: ${formatarPct(necPerfeicao)}
+- Ambição: ${formatarPct(necAmbicao)}
+- Necessidade de Brilhar: ${formatarPct(necBrilhar)}
+- Estabilidade e Segurança: ${formatarPct(necEstabilidade)}
+- Aventura e Variação: ${formatarPct(necAventura)}
+
+3. PONTOS IMPORTANTES:
+- Precisa estar com Pessoas: ${formatarPct(ptComPessoas)}  |  Prefere ficar sozinho: ${formatarPct(ptSozinho)}
+- Emocional: ${formatarPct(ptEmocional)}  |  Racional: ${formatarPct(ptRacional)}
+- Extrovertidos: ${formatarPct(ptExtrovertido)}  |  Introvertidos: ${formatarPct(ptIntrovertido)}
+- Executor: ${formatarPct(ptExecutor)}  |  Precisa de alguém para fazer: ${formatarPct(ptPrecisaAlguem)}
+- Conexão: ${formatarPct(ptConexao)}  |  Significância: ${formatarPct(ptSignificancia)}
+
+====================================================
+CÓPIA DAS RESPOSTAS (25 TABELAS)
+====================================================
+${detalhesTexto}`;
+
+      const btnSubmit = document.getElementById("btn-submit");
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Enviando respostas...";
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify({
+            nome: nome,
+            email: email,
+            data: data,
+            relatorio: relatorioCompleto
+          })
+        });
+
+        document.getElementById("confirmation-text").textContent =
+          `Obrigado, ${nome}! Suas respostas foram enviadas com sucesso para ${EMAIL_DESTINO}.`;
+        const box = document.getElementById("confirmation-box");
+        box.style.display = "block";
+        box.scrollIntoView({ behavior: "smooth" });
+      } catch (err) {
+        alert("Não foi possível conectar ao servidor de envio. Verifique sua conexão com a internet e tente novamente.");
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Finalizar e Enviar Respostas";
+      }
+    }
+  </script>
+</body>
+</html>
